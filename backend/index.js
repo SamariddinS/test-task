@@ -1,5 +1,5 @@
 //  ***   Dependencies   ***
-import { server } from "./lib/server.js";
+import { server } from "./src/server.js";
 
 
 // Declare the app
