@@ -1,0 +1,21 @@
+{
+  "name": "test-task",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "debug": "NODE_DEBUG=http node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SamariddinS/test-task.git"
+  },
+  "author": "Samariddin Sayfiddinov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SamariddinS/test-task/issues",
+    "email": "s.x.sayfiddionv@gmail.com"
+  },
+  "homepage": "https://github.com/SamariddinS/test-task#readme"
+}
