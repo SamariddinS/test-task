@@ -105,6 +105,11 @@ employeeRepository.save = async (employeeObject, addressObject) => {
 };
 
 employeeRepository.searchEmployees = async (criteria) => {
+    JSON.stringify(criteria, null, 4)
+    if (Object.keys(criteria).length === 0) {
+        return []
+    }
+
     return new Promise((resolve, reject) => {
         let searchQuery = `
             SELECT * FROM employees
