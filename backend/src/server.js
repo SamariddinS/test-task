@@ -83,6 +83,11 @@ server.unifiedServer = (req, res) => {
         // Convert the payload to a string
         const payloadString = JSON.stringify(payload);
 
+        // CORS
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, DELETE');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
         // Return the response
         res.setHeader('Content-Type', 'application/json');
         res.writeHead(statusCode);
