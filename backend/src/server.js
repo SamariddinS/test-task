@@ -57,7 +57,7 @@ server.unifiedServer = (req, res) => {
     req.on('data', (data) => {
         buffer += new TextDecoder().decode(data);
     });
-    req.on('end', () => {
+    req.on('end', async () => {
 
         // Check the handler this request should go to. If one is not found, use the notFound handler instead.
         const chosenHandler = typeof (server.router[trimmedPath]) !== 'undefined' ? server.router[trimmedPath] : handlers.notFound;
@@ -72,7 +72,7 @@ server.unifiedServer = (req, res) => {
         };
 
         // Route the request to the handler specified in the router
-        statusCode, payload = chosenHandler(data)
+        let { payload, statusCode } = await chosenHandler(data)
 
         // Use the status code called back handler, or default status code to 200
         statusCode = typeof (statusCode) == 'number' ? statusCode : 200;
@@ -108,11 +108,11 @@ server.router = {
 server.init = () => {
     // Start the HTTP server
     server.httpServer.listen(config.httpPort, () => {
-        console.log('\x1b[36m%s\x1b[0m', `The server is listening ob port ${config.httpPort}`);
+        console.log('\x1b[36m%s\x1b[0m', `The server is listening on port ${config.httpPort}`);
     });
 
     // Start the HTTPS server
     server.httpsServer.listen(config.httpsPort, () => {
-        console.log('\x1b[35m%s\x1b[0m', `The server is listening ob port ${config.httpsPort}`);
+        console.log('\x1b[35m%s\x1b[0m', `The server is listening on port ${config.httpsPort}`);
     });
 }
