@@ -36,7 +36,7 @@ handlers._employee.post = (data) => {
 
 handlers._employee.get = (data) => {
     // Get the user
-    return employee.read(data.payload)
+    return employee.read(data.queryStringObject)
 };
 
 handlers._employee.put = (data) => {
