@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/SamariddinS/test-task#readme",
   "dependencies": {
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.6",
+    "valibot": "^0.15.0"
   }
 }

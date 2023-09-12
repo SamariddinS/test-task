@@ -1,8 +1,8 @@
 import path from 'path';
 import sqlite3 from 'sqlite3';
 
-// Create a new SQLite database connection
-const db = new sqlite3.Database(path.join(path.dirname('__dirname'), '/././././db/test.db'));
+const DATABASE_PATH = path.join(path.dirname('__dirname'), '/././././db/test.db');
+const db = new sqlite3.Database(DATABASE_PATH);
 
 // Define the employeeRepository object
 export const employeeRepository = {};
@@ -22,9 +22,9 @@ employeeRepository.save = async (employeeObject, addressObject) => {
                     phone,
                     secondPhone,
                     nationality,
-                    education,
+                    educationId,
                     speciality,
-                    maritalStatus,
+                    maritalStatusId,
                     numberOfChild,
                     motherFullname,
                     motherWorkPlace,
@@ -122,6 +122,12 @@ employeeRepository.searchEmployees = async (criteria) => {
             values.push(`%${criteria.firstName}%`);
         }
 
+        if (criteria.sureName) {
+            searchQuery += values.length === 0 ? ` WHERE` : ` AND`;
+            searchQuery += ` sureName LIKE ?`;
+            values.push(`%${criteria.sureName}%`);
+        }
+
         if (criteria.lastName) {
             searchQuery += values.length === 0 ? ` WHERE` : ` AND`;
             searchQuery += ` lastName LIKE ?`;
@@ -134,7 +140,35 @@ employeeRepository.searchEmployees = async (criteria) => {
             values.push(criteria.passportNumber);
         }
 
-        // #TODO Add more criteria as needed...
+        if (criteria.phone) {
+            searchQuery += values.length === 0 ? ` WHERE` : ` AND`;
+            searchQuery += ` phone = ?`;
+            values.push(criteria.phone);
+        }
+
+        if (criteria.country) {
+            searchQuery += values.length === 0 ? ` WHERE` : ` AND`;
+            searchQuery += ` country = ?`;
+            values.push(criteria.country);
+        }
+
+        if (criteria.region) {
+            searchQuery += values.length === 0 ? ` WHERE` : ` AND`;
+            searchQuery += ` region = ?`;
+            values.push(criteria.region);
+        }
+
+        if (criteria.education) {
+            searchQuery += values.length === 0 ? ` WHERE` : ` AND`;
+            searchQuery += ` education = ?`;
+            values.push(criteria.education);
+        }
+
+        if (criteria.speciality) {
+            searchQuery += values.length === 0 ? ` WHERE` : ` AND`;
+            searchQuery += ` speciality = ?`;
+            values.push(criteria.speciality);
+        }
 
         db.all(searchQuery, values, (err, rows) => {
             if (err) {
@@ -161,9 +195,9 @@ employeeRepository.update = async (passportNumber, updatedData) => {
                 phone = ?,
                 secondPhone = ?,
                 nationality = ?,
-                education = ?,
+                educationId = ?,
                 speciality = ?,
-                maritalStatus = ?,
+                maritalStatusId = ?,
                 numberOfChild = ?,
                 motherFullname = ?,
                 motherWorkPlace = ?,
@@ -220,3 +254,19 @@ employeeRepository.delete = async (passportNumber) => {
         });
     });
 };
+
+employeeRepository.getSelectableValueId = async (tableName, columnName, value) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT id FROM ${tableName}
+            WHERE ${columnName} = ?
+        `;
+        db.get(query, [value], (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(row ? row.id : null);
+            }
+        });
+    });
+}

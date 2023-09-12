@@ -1,90 +1,81 @@
 //  ***   Employee Entity    ***
 
+import { boolean, minLength, number, object, safeParse, string } from 'valibot';
 import { employeeRepository } from '../repository/employee.repository.js';
 
-// Check that all required fields are filled out
-function validateField(payload, field, type, minLength = 2, exactLength = null) {
-    const value = payload[field];
-    if (typeof value === 'undefined' || value === null) {
-        return false;
-    }
-
-    if (typeof type === 'boolean') {
-        return typeof value === 'boolean';
-    }
-
-    if (typeof value === type && value.toString().trim().length >= minLength) {
-        if (exactLength !== null && value.toString().trim().length !== exactLength) {
-            return false;
-        }
-        return value.toString().trim();
-    }
-    return false;
-}
 
 // Define all the handlers
 export const employee = {};
 
 employee.create = async (data) => {
-    const firstName = validateField(data, 'firstName', 'string');
-    const sureName = validateField(data, 'sureName', 'string');
-    const lastName = validateField(data, 'lastName', 'string');
-    const birthday = validateField(data, 'birthday', 'string');
-    const passportNumber = validateField(data, 'passportNumber', 'string', 9, 9);
-    const phone = validateField(data, 'phone', 'string', 12, 12);
-    const secondPhone = validateField(data, 'secondPhone', 'string', 12, 12);
-    const nationality = validateField(data, 'nationality', 'string');
-    const country = validateField(data, 'country', 'string');
-    const region = validateField(data, 'region', 'string');
-    const district = validateField(data, 'district', 'string');
-    const street = validateField(data, 'street', 'string');
-    const homeNumber = validateField(data, 'homeNumber', 'string');
-    const registrationRegion = validateField(data, 'registrationRegion', 'string');
-    const education = validateField(data, 'education', 'string');
-    const speciality = validateField(data, 'speciality', 'string');
-    const maritalStatus = validateField(data, 'maritalStatus', 'boolean');
-    const numberOfChild = validateField(data, 'numberOfChild', 'number');
-    const motherFullname = validateField(data, 'motherFullname', 'string', 9, 9);
-    const matherWorkPlace = validateField(data, 'matherWorkPlace', 'string');
-    const fatherFullname = validateField(data, 'fatherFullname', 'string', 9, 9);
-    const fatherWorkPlace = validateField(data, 'fatherWorkPlace', 'string');
-    const tosAgreement = validateField(data, 'tosAgreement', 'boolean');
+    const employeeSchema = object({
+        firstName: string([minLength(3)]),
+        sureName: string([minLength(3)]),
+        lastName: string([minLength(3)]),
+        birthday: string([minLength(3)]),
+        passportNumber: string([minLength(9)]),
+        phone: string([minLength(12)]),
+        secondPhone: string([minLength(12)]),
+        nationality: string([minLength(5)]),
+        country: string([minLength(5)]),
+        region: string([minLength(5)]),
+        district: string([minLength(5)]),
+        street: string([minLength(5)]),
+        homeNumber: string([minLength(2)]),
+        registrationRegion: string([minLength(5)]),
+        education: string(),
+        speciality: string([minLength(5)]),
+        maritalStatus: string(),
+        numberOfChild: number(),
+        motherFullname: string([minLength(9)]),
+        matherWorkPlace: string([minLength(9)]),
+        fatherFullname: string([minLength(9)]),
+        fatherWorkPlace: string([minLength(9)]),
+        sisterFullname: string([minLength(9)]),
+        brotherFullname: string([minLength(9)]),
+        tosAgreement: boolean()
+    });
 
-    if (firstName && sureName && lastName && birthday && phone && passportNumber && country && registrationRegion && education && tosAgreement) {
+    var isSchemaValid = safeParse(employeeSchema, data).success
+
+    const educationId = await employeeRepository.getSelectableValueId('education_degrees', 'education_degree', data.education);
+    const maritalStatusId = await employeeRepository.getSelectableValueId('marital_statuses', 'status_name', data.maritalStatus);
+
+    if (isSchemaValid) {
         // Make sure the user doesnt already exist
-        const isExist = await employee.read({ 'passportNumber': passportNumber, })
+        const isExist = await employee.read({ 'passportNumber': data.passportNumber, })
 
         if (isExist.payload.searchResults[0]) {
             return { statusCode: 400, payload: { 'Error': 'Пользователь с таким номером паспорта уже существует' } };
         }
 
         const employeeObject = {
-            'firstName': firstName,
-            'sureName': sureName,
-            'lastName': lastName,
-            'birthday': birthday,
-            'passportNumber': passportNumber,
-            'phone': phone,
-            'secondPhone': secondPhone,
-            'nationality': nationality,
-            'education': education,
-            'speciality': speciality,
-            'maritalStatus': maritalStatus,
-            'numberOfChild': numberOfChild,
-            'motherFullname': motherFullname,
-            'matherWorkPlace': matherWorkPlace,
-            'fatherFullname': fatherFullname,
-            'fatherWorkPlace': fatherWorkPlace,
+            'firstName': data.firstName,
+            'sureName': data.sureName,
+            'lastName': data.lastName,
+            'birthday': data.birthday,
+            'passportNumber': data.passportNumber,
+            'phone': data.phone,
+            'secondPhone': data.secondPhone,
+            'nationality': data.nationality,
+            'educationId': educationId,
+            'speciality': data.speciality,
+            'maritalStatusId': maritalStatusId,
+            'numberOfChild': data.numberOfChild,
+            'motherFullname': data.motherFullname,
+            'matherWorkPlace': data.matherWorkPlace,
+            'fatherFullname': data.fatherFullname,
+            'fatherWorkPlace': data.fatherWorkPlace,
             'tosAgreement': true
         };
 
         const employeeAddress = {
-            'country': country,
-            'region': region,
-            'district': district,
-            'street': street,
-            'homeNumber': homeNumber,
-            'registrationRegion': registrationRegion,
+            'country': data.country,
+            'region': data.region,
+            'district': data.district,
+            'street': data.street,
+            'homeNumber': data.homeNumber,
+            'registrationRegion': data.registrationRegion,
         }
 
         const result = await employeeRepository.save(employeeObject, employeeAddress)
