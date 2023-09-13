@@ -78,18 +78,13 @@ server.unifiedServer = (req, res) => {
         statusCode = typeof (statusCode) == 'number' ? statusCode : 200;
 
         // Use the payload called back by the handler, or default payload to an empty object
-        payload = typeof (payload) == 'object' ? payload : {};
+        payload = typeof (payload) == 'object' ? payload : typeof (payload) == 'string' ? payload : {};
 
         // Convert the payload to a string
-        const payloadString = JSON.stringify(payload);
-
-        // CORS
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, DELETE');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        const payloadString = typeof (payload) == 'object' ? JSON.stringify(payload) : payload;
 
         // Return the response
-        res.setHeader('Content-Type', 'application/json');
+        typeof (payload) == 'object' ? res.setHeader('Content-Type', 'application/json') : res.setHeader('Content-Type', 'text/html');
         res.writeHead(statusCode);
         res.end(payloadString);
 
@@ -107,6 +102,7 @@ server.unifiedServer = (req, res) => {
 server.router = {
     'ping': handlers.ping,
     'employee': handlers.employee,
+    '': handlers.index,
 };
 
 // Init script

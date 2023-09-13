@@ -1,5 +1,7 @@
 //  ***   Request handlers    ***
 
+import fs from 'fs/promises';
+import path from 'path';
 import { employee } from './employee/entity/employee.entity.js';
 
 // Define all the handlers
@@ -15,6 +17,18 @@ handlers.notFound = () => {
     return 404;
 };
 
+handlers.index = async () => {
+    const indexHtmlPath = path.join(path.dirname('__dirname'), '/././public/index.html')
+
+    try {
+        const content = await fs.readFile(indexHtmlPath, 'utf8');
+        // Return the HTML content with a 200 status code
+        return { statusCode: 200, payload: content };
+    } catch (err) {
+        console.error(err);
+        return 500; // Return a 500 status code if there's an error reading the file
+    }
+};
 
 // Employee
 handlers.employee = async (data) => {
