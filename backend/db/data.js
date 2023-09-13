@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS employees (
     fatherWorkPlace TEXT,
     tosAgreement BOOLEAN NOT NULL
 );
+`);
+db.run(`
 CREATE TABLE IF NOT EXISTS employeeAddress (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     employeeId INTEGER NOT NULL,
@@ -36,5 +38,4 @@ CREATE TABLE IF NOT EXISTS employeeAddress (
     homeNumber TEXT,
     registrationRegion TEXT,
     FOREIGN KEY (employeeId) REFERENCES employees(id)
-);
-`);
+);`)
