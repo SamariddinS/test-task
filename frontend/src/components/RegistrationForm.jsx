@@ -21,13 +21,13 @@ const validationSchema = Yup.object().shape({
     registrationRegion: Yup.string().required('Required'),
     education: Yup.string().required('Required'),
     speciality: Yup.string().required('Required'),
-    maritalStatus: Yup.boolean(),
+    maritalStatus: Yup.string().required('Required'),
     numberOfChild: Yup.number().required('Required'),
     motherFullname: Yup.string().required('Required'),
     matherWorkPlace: Yup.string(),
     fatherFullname: Yup.string().required('Required'),
     fatherWorkPlace: Yup.string(),
-    tosAgreement: Yup.boolean().oneOf([true], 'You must accept the Terms of Service'),
+    tosAgreement: Yup.boolean().oneOf([true], 'Вы должны принять Условия предоставления услуг'),
 });
 
 const initialValues = {
@@ -47,7 +47,7 @@ const initialValues = {
     registrationRegion: '',
     education: '',
     speciality: '',
-    maritalStatus: false,
+    maritalStatus: '',
     numberOfChild: 0,
     motherFullname: '',
     matherWorkPlace: '',
@@ -55,6 +55,9 @@ const initialValues = {
     fatherWorkPlace: '',
     tosAgreement: false,
 };
+
+const educationOptions = ["high School", "bachelor", "magister"];
+const maritalStatusOptions = ["single", "married", "divorced"];
 
 const RegistrationForm = () => {
     const handleSubmit = async (values, { setSubmitting }) => {
@@ -233,15 +236,25 @@ const RegistrationForm = () => {
                             />
                             <ErrorMessage name="registrationRegion" component="div" className="text-red-500" />
                         </div>
+
                         <div className="mb-4">
                             <label htmlFor="education" className="block font-medium mb-1">
                                 Образование:
                             </label>
                             <Field
-                                type="text"
+                                as="select"
                                 name="education"
                                 className="w-full border rounded px-3 py-2"
-                            />
+                            >
+                                <option value="" disabled>
+                                    Выберите образование
+                                </option>
+                                {educationOptions.map((option) => (
+                                    <option key={option} value={option}>
+                                        {option}
+                                    </option>
+                                ))}
+                            </Field>
                             <ErrorMessage name="education" component="div" className="text-red-500" />
                         </div>
                         <div className="mb-4">
@@ -256,14 +269,23 @@ const RegistrationForm = () => {
                             <ErrorMessage name="speciality" component="div" className="text-red-500" />
                         </div>
                         <div className="mb-4">
-                            <label htmlFor="maritalStatus" className="flex items-center">
+                            <label htmlFor="maritalStatus" className="block font-medium mb-1">
                                 Семейное положение:
                             </label>
                             <Field
-                                type="checkbox"
+                                as="select"
                                 name="maritalStatus"
                                 className="w-full border rounded px-3 py-2"
-                            />
+                            >
+                                <option value="" disabled>
+                                    Выберите семейное положение
+                                </option>
+                                {maritalStatusOptions.map((option) => (
+                                    <option key={option} value={option}>
+                                        {option}
+                                    </option>
+                                ))}
+                            </Field>
                             <ErrorMessage name="maritalStatus" component="div" className="text-red-500" />
                         </div>
                         <div className="mb-4">
