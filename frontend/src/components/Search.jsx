@@ -36,27 +36,99 @@ const SearchComponent = () => {
     };
 
     return (
-        <div>
-            <h2>Search Employees</h2>
-            <div>
-                <label htmlFor="firstName">First Name:</label>
+        <div className="max-w-md mx-auto my-8 p-6 bg-white border rounded shadow">
+            <h2 className="text-xl font-semibold mb-2">Поиск сотрудников</h2>
+            <div className="mb-4">
+                <label htmlFor="firstName" className="block font-medium mb-1">Имя:</label>
                 <input
                     type="text"
                     name="firstName"
                     value={searchCriteria.firstName}
                     onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
                 />
             </div>
-            <div>
-                <label htmlFor="passportNumber">Passport Number:</label>
+            <div className="mb-4">
+                <label htmlFor="sureName" className="block font-medium mb-1">Фамилия:</label>
+                <input
+                    type="text"
+                    name="sureName"
+                    value={searchCriteria.sureName}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                />
+            </div>
+            <div className="mb-4">
+                <label htmlFor="lastName" className="block font-medium mb-1">Отчество:</label>
+                <input
+                    type="text"
+                    name="lastName"
+                    value={searchCriteria.lastName}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                />
+            </div>
+            <div className="mb-4">
+                <label htmlFor="passportNumber" className="block font-medium mb-1">Номер паспорта:</label>
                 <input
                     type="text"
                     name="passportNumber"
                     value={searchCriteria.passportNumber}
                     onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
                 />
             </div>
-            <button onClick={handleSearch} disabled={loading}>
+            <div className="mb-4">
+                <label htmlFor="phone" className="block font-medium mb-1">Номер тел:</label>
+                <input
+                    type="text"
+                    name="phone"
+                    value={searchCriteria.phone}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                />
+            </div>
+            <div className="mb-4">
+                <label htmlFor="country" className="block font-medium mb-1">Страна:</label>
+                <input
+                    type="text"
+                    name="country"
+                    value={searchCriteria.country}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                />
+            </div>
+            <div className="mb-4">
+                <label htmlFor="region" className="block font-medium mb-1">Область:</label>
+                <input
+                    type="text"
+                    name="region"
+                    value={searchCriteria.region}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                />
+            </div>
+            <div className="mb-4">
+                <label htmlFor="education" className="block font-medium mb-1">Образование:</label>
+                <input
+                    type="text"
+                    name="education"
+                    value={searchCriteria.education}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                />
+            </div>
+            <div className="mb-4">
+                <label htmlFor="speciality" className="block font-medium mb-1">Специальность:</label>
+                <input
+                    type="text"
+                    name="speciality"
+                    value={searchCriteria.speciality}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                />
+            </div>
+            <button onClick={handleSearch} disabled={loading} className="bg-blue-500 text-white rounded py-2 px-4 hover:bg-blue-600">
                 Search
             </button>
             {loading && <p>Loading...</p>}
